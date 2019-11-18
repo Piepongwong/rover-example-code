@@ -2,11 +2,13 @@
 // ======================
 
 // ======================
-var rover1 = {
-  direction: "N",
-  position: [4,4],
-  travelLog: [[4,4]],
-  turnLeft: function(){
+
+function RoverConstructor(initialDirection, initialPosition) {
+  this.__proto__.roverCount++;
+  this.direction =  initialDirection;
+  this.position = initialPosition;
+  this.travelLog = [initialPosition]
+  this.turnLeft = function(){
     console.log("turnLeft was called!");
     switch(this.direction) {
       case("N"):
@@ -22,8 +24,8 @@ var rover1 = {
         this.direction = "N"
         break;
     }
-  },
-  turnRight: function(){
+  }
+  this.turnRight = function(){
     console.log("turnRight was called!");
     switch(this.direction) {
       case("N"):
@@ -39,8 +41,8 @@ var rover1 = {
         this.direction = "N"
         break;
     }
-  },
-  moveForward: function(){
+  }
+  this.moveForward = function(){
     console.log("moveForward was called")
     switch(this.direction) {
       case("N"):
@@ -74,9 +76,9 @@ var rover1 = {
     }
   
     this.travelLog.push(this.position);
-    checkForObstacleCollision(this, obstacles);
-  },
-  moveBackwards: function(){
+    checkForObstacleCollision(this, obstacles); // left to refactor
+  }
+  this.moveBackwards = function(){
     console.log("move backwards was called")
     switch(this.direction) {
       case("N"):
@@ -111,8 +113,8 @@ var rover1 = {
   
     this.travelLog.push(this.position);
     checkForObstacleCollision(this, obstacles);
-  },
-  instructRover: function(stringOfCommands) {
+  }
+  this.instructRover = function(stringOfCommands) {
     stringOfCommands = stringOfCommands.toLowerCase()
     let commands = "frlb";
     for(var i = 0; i < stringOfCommands.length; i++) {
@@ -139,11 +141,11 @@ var rover1 = {
   }
 }
 
-var rover2 = {
-  direction: "N",
-  position: [6,6],
-  travelLog: [[6,6]]
-}
+RoverConstructor.prototype.roverCount = 0
+
+var rover1 = new RoverConstructor("N", [4,4])
+var rover2 = new RoverConstructor("W", [4,8])
+var rover3 = new RoverConstructor("W", [5,8])
 
 var obstacles = [[6,7]]
 
