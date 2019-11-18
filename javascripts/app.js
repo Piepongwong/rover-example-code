@@ -3,8 +3,7 @@
 
 // ======================
 
-function RoverConstructor(initialDirection, initialPosition) {
-  this.__proto__.roverCount++;
+function Rover(initialDirection, initialPosition, manager) {
   this.direction =  initialDirection;
   this.position = initialPosition;
   this.travelLog = [initialPosition]
@@ -76,7 +75,8 @@ function RoverConstructor(initialDirection, initialPosition) {
     }
   
     this.travelLog.push(this.position);
-    checkForObstacleCollision(this, obstacles); // left to refactor
+    manager.checkForObstacleCollision(this); // calling the method of rovermanager
+    manager.checkForRoverCollision(rover1, rover2) // calling the method of rovermanager
   }
   this.moveBackwards = function(){
     console.log("move backwards was called")
@@ -110,9 +110,9 @@ function RoverConstructor(initialDirection, initialPosition) {
         else this.position[0]++;
         break;
     }
-  
-    this.travelLog.push(this.position);
-    checkForObstacleCollision(this, obstacles);
+    this.travelLog.push(this.position);  
+    manager.checkForObstacleCollision(this); // calling the method of rovermanager
+    manager.checkForRoverCollision(rover1, rover2) // calling the method of rovermanager
   }
   this.instructRover = function(stringOfCommands) {
     stringOfCommands = stringOfCommands.toLowerCase()
@@ -137,30 +137,44 @@ function RoverConstructor(initialDirection, initialPosition) {
           break;
       }
     }
-    checkForRoverCollision(rover1, rover2)
   }
 }
 
-RoverConstructor.prototype.roverCount = 0
+var rover1 = new Rover("N", [4,4])
+var rover2 = new Rover("W", [4,8])
+var rover3 = new Rover("W", [5,8])
 
-var rover1 = new RoverConstructor("N", [4,4])
-var rover2 = new RoverConstructor("W", [4,8])
-var rover3 = new RoverConstructor("W", [5,8])
-
-var obstacles = [[6,7]]
-
-
-function checkForObstacleCollision(rover, obstacles) {
-  for(let i = 0; i<obstacles.length; i++) {
-    if(obstacles[i][0] === rover.position[0] 
-      && obstacles[i][1] === rover.position[1]) alert("Obstacle BOEM!")
+/* The rover manager is aware of all the rovers and the obstacles
+  an instance of rover manager is also passed to the rovers so that the rovers can
+  call the collision detection functions every time they move
+*/
+function RoverManager(obstacles){
+  this.rovers = [] //added dynamically through the addRover method
+  this.obstacles = obstacles;
+  this.checkForObstacleCollision = function(rover) {
+    for(let i = 0; i<this.obstacles.length; i++) {
+      if(this.obstacles[i][0] === rover.position[0] 
+        && this.obstacles[i][1] === rover.position[1]) alert("Obstacle BOEM!");
+    }
+  }
+  this.checkForRoverCollision = function(rover){
+    for(let i = 0; i < this.rovers.length; i++) {
+      if(this.rovers[i].position[0] === rover.position[0] 
+        && this.rovers[i].position[1] === rover.position[1]
+        && rover !== this.rovers[i] )alert("Rover BOEM!");
+    }
+  }
+  this.addRover = function(rover) {
+    this.rovers.push(rover);
   }
 }
+var roverManager = new RoverManager([[3,3], [6,7]]);
+var rover1 = new Rover("N", [5,5], roverManager)
+var rover2 = new Rover("N", [9,5], roverManager)
+roverManager.addRover(rover1);
+roverManager.addRover(rover2);
 
-function checkForRoverCollision(rover1, rover2) {
-  if(rover1.position[0] === rover2.position[0] 
-    && rover1.position[1] === rover2.position[1])alert("Rover BOEM!")
-}
-
-// instructRover("fl", rover1)
-// instructRover("blff", rover2)
+/* Test the code */
+rover1.instructRover("rffff"); // should alert rover BOEM!
+rover1.instructRover("llffffrbblff"); // should alert obstacle BOEM!
+rover2.instructRover("lfffrff") // should also alert obstacle BOEM!
