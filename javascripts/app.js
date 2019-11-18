@@ -2,11 +2,18 @@
 // ======================
 
 // ======================
-var rover = {
+var rover1 = {
   direction: "N",
   position: [4,4],
   travelLog: [[4,4]]
 }
+var rover2 = {
+  direction: "N",
+  position: [6,6],
+  travelLog: [[6,6]]
+}
+
+var obstacles = [[6,7]]
 
 function turnLeft(rover){
   console.log("turnLeft was called!");
@@ -78,6 +85,7 @@ function moveForward(rover){
   }
 
   rover.travelLog.push(rover.position);
+  checkForObstacleCollision(rover, obstacles);
 
 }
 
@@ -115,11 +123,11 @@ function moveBackwards(rover){
   }
 
   rover.travelLog.push(rover.position);
-
+  checkForObstacleCollision(rover, obstacles);
 }
 
-function instructRover(stringOfCommands) {
-  debugger
+function instructRover(stringOfCommands, rover) {
+  stringOfCommands = stringOfCommands.toLowerCase()
   let commands = "frlb";
   for(var i = 0; i < stringOfCommands.length; i++) {
     if(!commands.includes(stringOfCommands[i])) {
@@ -141,5 +149,20 @@ function instructRover(stringOfCommands) {
         break;
     }
   }
+  checkForRoverCollision(rover1, rover2)
 }
 
+function checkForObstacleCollision(rover, obstacles) {
+  for(let i = 0; i<obstacles.length; i++) {
+    if(obstacles[i][0] === rover.position[0] 
+      && obstacles[i][1] === rover.position[1]) alert("Obstacle BOEM!")
+  }
+}
+
+function checkForRoverCollision(rover1, rover2) {
+  if(rover1.position[0] === rover2.position[0] 
+    && rover1.position[1] === rover2.position[1])alert("Rover BOEM!")
+}
+
+instructRover("fl", rover1)
+instructRover("blff", rover2)
