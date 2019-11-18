@@ -122,15 +122,8 @@ function instructRover(stringOfCommands) {
   debugger
   let commands = "frlb";
   for(var i = 0; i < stringOfCommands.length; i++) {
-    let valid = false;
-    for(let j = 0; j < commands.length; j++){
-      if(commands[j] === stringOfCommands[i]) {
-        valid = true;
-        break;
-      }
-    }
-    if(!valid) {
-      console.log("INVALID INPUT!!");
+    if(!commands.includes(stringOfCommands[i])) {
+      console.log("INVALID INPUT")
       return;
     }
     switch(stringOfCommands[i]) {
