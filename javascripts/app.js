@@ -5,8 +5,140 @@
 var rover1 = {
   direction: "N",
   position: [4,4],
-  travelLog: [[4,4]]
+  travelLog: [[4,4]],
+  turnLeft: function(){
+    console.log("turnLeft was called!");
+    switch(this.direction) {
+      case("N"):
+        this.direction = "W"
+        break;
+      case("W"):
+        this.direction = "S"
+        break;
+      case("S"):
+        this.direction = "E";
+        break;
+      case("E"):
+        this.direction = "N"
+        break;
+    }
+  },
+  turnRight: function(){
+    console.log("turnRight was called!");
+    switch(this.direction) {
+      case("N"):
+        this.direction = "E"
+        break;
+      case("E"):
+        this.direction = "S"
+        break;
+      case("S"):
+        this.direction = "W";
+        break;
+      case("W"):
+        this.direction = "N"
+        break;
+    }
+  },
+  moveForward: function(){
+    console.log("moveForward was called")
+    switch(this.direction) {
+      case("N"):
+        if(this.position[1] + 1 > 9) {
+          console.log("No can do sir");
+          return;
+        }
+        else this.position[1]++;
+        break;
+      case("E"):
+        if(this.position[0] + 1 > 9) {
+          console.log("No can do sir");
+          return;
+        }
+        else this.position[0]++;
+        break;
+      case("S"):
+        if(this.position[1] - 1 < 0) {
+          console.log("No can do sir");
+          return;
+        }
+        else this.position[1]--;
+        break;
+      case("W"):
+        if(this.position[0] - 1 < 0) {
+          console.log("No can do sir");
+          return;
+        }
+        else this.position[0]--;
+        break;
+    }
+  
+    this.travelLog.push(this.position);
+    checkForObstacleCollision(this, obstacles);
+  },
+  moveBackwards: function(){
+    console.log("move backwards was called")
+    switch(this.direction) {
+      case("N"):
+        if(this.position[1] - 1 < 0) {
+          console.log("No can do sir");
+          return;
+        }
+        else this.position[1]--;
+        break;
+      case("E"):
+        if(this.position[0] - 1 < 0) {
+          console.log("No can do sir");
+          return;
+        }
+        else this.position[0]--;
+        break;
+      case("S"):
+        if(this.position[1] + 1 > 9) {
+          console.log("No can do sir");
+          return;
+        }
+        else this.position[1]++;
+        break;
+      case("W"):
+        if(this.position[0] + 1 > 9) {
+          console.log("No can do sir");
+          return;
+        }
+        else this.position[0]++;
+        break;
+    }
+  
+    this.travelLog.push(this.position);
+    checkForObstacleCollision(this, obstacles);
+  },
+  instructRover: function(stringOfCommands) {
+    stringOfCommands = stringOfCommands.toLowerCase()
+    let commands = "frlb";
+    for(var i = 0; i < stringOfCommands.length; i++) {
+      if(!commands.includes(stringOfCommands[i])) {
+        console.log("INVALID INPUT")
+        return;
+      }
+      switch(stringOfCommands[i]) {
+        case("f"):
+          this.moveForward();
+          break;
+        case("l"):
+          this.turnLeft();
+          break;
+        case("r"):
+          this.turnRight();
+          break;
+        case("b"):
+          this.moveBackwards();
+          break;
+      }
+    }
+    checkForRoverCollision(rover1, rover2)
+  }
 }
+
 var rover2 = {
   direction: "N",
   position: [6,6],
@@ -15,142 +147,6 @@ var rover2 = {
 
 var obstacles = [[6,7]]
 
-function turnLeft(rover){
-  console.log("turnLeft was called!");
-  switch(rover.direction) {
-    case("N"):
-      rover.direction = "W"
-      break;
-    case("W"):
-      rover.direction = "S"
-      break;
-    case("S"):
-      rover.direction = "E";
-      break;
-    case("E"):
-      rover.direction = "N"
-      break;
-  }
-}
-
-function turnRight(rover){
-  console.log("turnRight was called!");
-  switch(rover.direction) {
-    case("N"):
-      rover.direction = "E"
-      break;
-    case("E"):
-      rover.direction = "S"
-      break;
-    case("S"):
-      rover.direction = "W";
-      break;
-    case("W"):
-      rover.direction = "N"
-      break;
-  }
-}
-
-function moveForward(rover){
-  console.log("moveForward was called")
-  switch(rover.direction) {
-    case("N"):
-      if(rover.position[1] + 1 > 9) {
-        console.log("No can do sir");
-        return;
-      }
-      else rover.position[1]++;
-      break;
-    case("E"):
-      if(rover.position[0] + 1 > 9) {
-        console.log("No can do sir");
-        return;
-      }
-      else rover.position[0]++;
-      break;
-    case("S"):
-      if(rover.position[1] - 1 < 0) {
-        console.log("No can do sir");
-        return;
-      }
-      else rover.position[1]--;
-      break;
-    case("W"):
-      if(rover.position[0] - 1 < 0) {
-        console.log("No can do sir");
-        return;
-      }
-      else rover.position[0]--;
-      break;
-  }
-
-  rover.travelLog.push(rover.position);
-  checkForObstacleCollision(rover, obstacles);
-
-}
-
-function moveBackwards(rover){
-  console.log("move backwards was called")
-  switch(rover.direction) {
-    case("N"):
-      if(rover.position[1] - 1 < 0) {
-        console.log("No can do sir");
-        return;
-      }
-      else rover.position[1]--;
-      break;
-    case("E"):
-      if(rover.position[0] - 1 < 0) {
-        console.log("No can do sir");
-        return;
-      }
-      else rover.position[0]--;
-      break;
-    case("S"):
-      if(rover.position[1] + 1 > 9) {
-        console.log("No can do sir");
-        return;
-      }
-      else rover.position[1]++;
-      break;
-    case("W"):
-      if(rover.position[0] + 1 > 9) {
-        console.log("No can do sir");
-        return;
-      }
-      else rover.position[0]++;
-      break;
-  }
-
-  rover.travelLog.push(rover.position);
-  checkForObstacleCollision(rover, obstacles);
-}
-
-function instructRover(stringOfCommands, rover) {
-  stringOfCommands = stringOfCommands.toLowerCase()
-  let commands = "frlb";
-  for(var i = 0; i < stringOfCommands.length; i++) {
-    if(!commands.includes(stringOfCommands[i])) {
-      console.log("INVALID INPUT")
-      return;
-    }
-    switch(stringOfCommands[i]) {
-      case("f"):
-        moveForward(rover);
-        break;
-      case("l"):
-        turnLeft(rover);
-        break;
-      case("r"):
-        turnRight(rover);
-        break;
-      case("b"):
-        moveBackwards(rover);
-        break;
-    }
-  }
-  checkForRoverCollision(rover1, rover2)
-}
 
 function checkForObstacleCollision(rover, obstacles) {
   for(let i = 0; i<obstacles.length; i++) {
@@ -164,5 +160,5 @@ function checkForRoverCollision(rover1, rover2) {
     && rover1.position[1] === rover2.position[1])alert("Rover BOEM!")
 }
 
-instructRover("fl", rover1)
-instructRover("blff", rover2)
+// instructRover("fl", rover1)
+// instructRover("blff", rover2)
